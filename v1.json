@@ -1,0 +1,596 @@
+{
+  "format": 1,
+  "version": 1,
+  "categories": [
+    {
+      "id": "system",
+      "title": {
+        "en": "System",
+        "tr": "Sistem"
+      }
+    },
+    {
+      "id": "disk",
+      "title": {
+        "en": "Disk & memory",
+        "tr": "Disk ve bellek"
+      }
+    },
+    {
+      "id": "services",
+      "title": {
+        "en": "Services",
+        "tr": "Servisler"
+      }
+    },
+    {
+      "id": "logs",
+      "title": {
+        "en": "Logs",
+        "tr": "Loglar"
+      }
+    },
+    {
+      "id": "docker",
+      "title": {
+        "en": "Docker",
+        "tr": "Docker"
+      }
+    },
+    {
+      "id": "web",
+      "title": {
+        "en": "Web server",
+        "tr": "Web sunucusu"
+      }
+    },
+    {
+      "id": "network",
+      "title": {
+        "en": "Network",
+        "tr": "Ağ"
+      }
+    },
+    {
+      "id": "packages",
+      "title": {
+        "en": "Packages",
+        "tr": "Paketler"
+      }
+    }
+  ],
+  "snippets": [
+    {
+      "id": "uptime",
+      "category": "system",
+      "title": {
+        "en": "Uptime and load",
+        "tr": "Çalışma süresi ve yük"
+      },
+      "description": {
+        "en": "How long the server has been up and its load averages.",
+        "tr": "Sunucunun ne kadar süredir açık olduğu ve yük ortalamaları."
+      },
+      "command": "uptime",
+      "risk": "read"
+    },
+    {
+      "id": "top-cpu",
+      "category": "system",
+      "title": {
+        "en": "Top processes by CPU",
+        "tr": "En çok CPU kullananlar"
+      },
+      "description": {
+        "en": "The ten processes using the most CPU.",
+        "tr": "En çok CPU kullanan on işlem."
+      },
+      "command": "ps aux --sort=-%cpu | head -n 11",
+      "risk": "read"
+    },
+    {
+      "id": "top-mem",
+      "category": "system",
+      "title": {
+        "en": "Top processes by memory",
+        "tr": "En çok bellek kullananlar"
+      },
+      "description": {
+        "en": "The ten processes using the most memory.",
+        "tr": "En çok bellek kullanan on işlem."
+      },
+      "command": "ps aux --sort=-%mem | head -n 11",
+      "risk": "read"
+    },
+    {
+      "id": "os-release",
+      "category": "system",
+      "title": {
+        "en": "OS version",
+        "tr": "İşletim sistemi sürümü"
+      },
+      "description": {
+        "en": "Distribution, version and kernel.",
+        "tr": "Dağıtım, sürüm ve çekirdek."
+      },
+      "command": "cat /etc/os-release && uname -r",
+      "risk": "read"
+    },
+    {
+      "id": "who",
+      "category": "system",
+      "title": {
+        "en": "Who is logged in",
+        "tr": "Kimler bağlı"
+      },
+      "description": {
+        "en": "Users logged in now and recent logins.",
+        "tr": "Şu an bağlı kullanıcılar ve son girişler."
+      },
+      "command": "who && last -n 10",
+      "risk": "read"
+    },
+    {
+      "id": "reboot-needed",
+      "category": "system",
+      "title": {
+        "en": "Reboot required?",
+        "tr": "Yeniden başlatma gerekli mi?"
+      },
+      "description": {
+        "en": "Whether an update asked for a reboot (Debian/Ubuntu).",
+        "tr": "Bir güncelleme yeniden başlatma istedi mi (Debian/Ubuntu)."
+      },
+      "command": "cat /var/run/reboot-required 2>/dev/null || echo 'no reboot required'",
+      "risk": "read"
+    },
+    {
+      "id": "df",
+      "category": "disk",
+      "title": {
+        "en": "Disk usage",
+        "tr": "Disk kullanımı"
+      },
+      "description": {
+        "en": "Free and used space on every mounted filesystem.",
+        "tr": "Bağlı her dosya sisteminde boş ve dolu alan."
+      },
+      "command": "df -h",
+      "risk": "read"
+    },
+    {
+      "id": "du-dir",
+      "category": "disk",
+      "title": {
+        "en": "Biggest folders in a directory",
+        "tr": "Bir dizindeki en büyük klasörler"
+      },
+      "description": {
+        "en": "The largest entries directly inside {{path}}.",
+        "tr": "{{path}} içindeki en büyük girdiler."
+      },
+      "command": "du -h --max-depth=1 {{path}} 2>/dev/null | sort -hr | head -n 15",
+      "risk": "read"
+    },
+    {
+      "id": "free",
+      "category": "disk",
+      "title": {
+        "en": "Memory and swap",
+        "tr": "Bellek ve swap"
+      },
+      "description": {
+        "en": "RAM and swap in use.",
+        "tr": "Kullanılan RAM ve swap."
+      },
+      "command": "free -m",
+      "risk": "read"
+    },
+    {
+      "id": "inodes",
+      "category": "disk",
+      "title": {
+        "en": "Inode usage",
+        "tr": "Inode kullanımı"
+      },
+      "description": {
+        "en": "A disk that looks full with space left is often out of inodes.",
+        "tr": "Boş alan varken dolu görünen disk çoğu zaman inode'suz kalmıştır."
+      },
+      "command": "df -i",
+      "risk": "read"
+    },
+    {
+      "id": "big-files",
+      "category": "disk",
+      "title": {
+        "en": "Large files",
+        "tr": "Büyük dosyalar"
+      },
+      "description": {
+        "en": "Files over 100 MB under {{path}}.",
+        "tr": "{{path}} altında 100 MB'tan büyük dosyalar."
+      },
+      "command": "find {{path}} -xdev -type f -size +100M -exec ls -lh {} + 2>/dev/null | sort -k5 -hr | head -n 20",
+      "risk": "read"
+    },
+    {
+      "id": "svc-status",
+      "category": "services",
+      "title": {
+        "en": "Service status",
+        "tr": "Servis durumu"
+      },
+      "description": {
+        "en": "State and latest log lines of {{service}}.",
+        "tr": "{{service}} servisinin durumu ve son log satırları."
+      },
+      "command": "systemctl status {{service}} --no-pager",
+      "risk": "read"
+    },
+    {
+      "id": "svc-restart",
+      "category": "services",
+      "title": {
+        "en": "Restart a service",
+        "tr": "Servisi yeniden başlat"
+      },
+      "description": {
+        "en": "Restarts {{service}}; it is briefly unavailable.",
+        "tr": "{{service}} servisini yeniden başlatır; kısa süre erişilemez."
+      },
+      "command": "sudo systemctl restart {{service}}",
+      "risk": "write"
+    },
+    {
+      "id": "svc-failed",
+      "category": "services",
+      "title": {
+        "en": "Failed services",
+        "tr": "Hatalı servisler"
+      },
+      "description": {
+        "en": "Units that failed to start or crashed.",
+        "tr": "Başlayamayan ya da çöken birimler."
+      },
+      "command": "systemctl --failed --no-pager",
+      "risk": "read"
+    },
+    {
+      "id": "svc-enable",
+      "category": "services",
+      "title": {
+        "en": "Enable at boot",
+        "tr": "Açılışta başlat"
+      },
+      "description": {
+        "en": "Starts {{service}} now and at every boot.",
+        "tr": "{{service}} servisini şimdi ve her açılışta başlatır."
+      },
+      "command": "sudo systemctl enable --now {{service}}",
+      "risk": "write"
+    },
+    {
+      "id": "journal-follow",
+      "category": "logs",
+      "title": {
+        "en": "Follow a service log",
+        "tr": "Servis logunu izle"
+      },
+      "description": {
+        "en": "New log lines of {{service}} as they arrive. Stop with Ctrl+C.",
+        "tr": "{{service}} servisinin yeni log satırları, geldikçe. Ctrl+C ile durur."
+      },
+      "command": "journalctl -u {{service}} -f",
+      "risk": "read"
+    },
+    {
+      "id": "journal-errors",
+      "category": "logs",
+      "title": {
+        "en": "Errors since boot",
+        "tr": "Açılıştan beri hatalar"
+      },
+      "description": {
+        "en": "Error-level messages from this boot.",
+        "tr": "Bu açılıştaki hata düzeyindeki mesajlar."
+      },
+      "command": "journalctl -b -p err --no-pager | tail -n 50",
+      "risk": "read"
+    },
+    {
+      "id": "tail-file",
+      "category": "logs",
+      "title": {
+        "en": "Follow a log file",
+        "tr": "Log dosyasını izle"
+      },
+      "description": {
+        "en": "New lines of {{file}} as they arrive. Stop with Ctrl+C.",
+        "tr": "{{file}} dosyasının yeni satırları, geldikçe. Ctrl+C ile durur."
+      },
+      "command": "tail -n 100 -f {{file}}",
+      "risk": "read"
+    },
+    {
+      "id": "journal-size",
+      "category": "logs",
+      "title": {
+        "en": "Journal disk usage",
+        "tr": "Journal'ın kapladığı alan"
+      },
+      "description": {
+        "en": "How much space the systemd journal takes.",
+        "tr": "systemd journal'ın ne kadar yer kapladığı."
+      },
+      "command": "journalctl --disk-usage",
+      "risk": "read"
+    },
+    {
+      "id": "journal-vacuum",
+      "category": "logs",
+      "title": {
+        "en": "Shrink the journal",
+        "tr": "Journal'ı küçült"
+      },
+      "description": {
+        "en": "Deletes journal files older than {{days}} days.",
+        "tr": "{{days}} günden eski journal dosyalarını siler."
+      },
+      "command": "sudo journalctl --vacuum-time={{days}}d",
+      "risk": "destructive"
+    },
+    {
+      "id": "docker-ps",
+      "category": "docker",
+      "title": {
+        "en": "Running containers",
+        "tr": "Çalışan konteynerler"
+      },
+      "description": {
+        "en": "Containers, their status and ports.",
+        "tr": "Konteynerler, durumları ve portları."
+      },
+      "command": "docker ps",
+      "risk": "read"
+    },
+    {
+      "id": "docker-logs",
+      "category": "docker",
+      "title": {
+        "en": "Follow container logs",
+        "tr": "Konteyner logunu izle"
+      },
+      "description": {
+        "en": "The latest and new log lines of {{container}}. Stop with Ctrl+C.",
+        "tr": "{{container}} konteynerinin son ve yeni log satırları. Ctrl+C ile durur."
+      },
+      "command": "docker logs --tail 100 -f {{container}}",
+      "risk": "read"
+    },
+    {
+      "id": "docker-stats",
+      "category": "docker",
+      "title": {
+        "en": "Container resource use",
+        "tr": "Konteyner kaynak kullanımı"
+      },
+      "description": {
+        "en": "CPU and memory per container, one snapshot.",
+        "tr": "Konteyner başına CPU ve bellek, tek ölçüm."
+      },
+      "command": "docker stats --no-stream",
+      "risk": "read"
+    },
+    {
+      "id": "compose-up",
+      "category": "docker",
+      "title": {
+        "en": "Compose up",
+        "tr": "Compose ile başlat"
+      },
+      "description": {
+        "en": "Starts or updates the stack in {{dir}} in the background.",
+        "tr": "{{dir}} içindeki yığını arka planda başlatır ya da günceller."
+      },
+      "command": "cd {{dir}} && docker compose up -d",
+      "risk": "write"
+    },
+    {
+      "id": "docker-restart",
+      "category": "docker",
+      "title": {
+        "en": "Restart a container",
+        "tr": "Konteyneri yeniden başlat"
+      },
+      "description": {
+        "en": "Restarts {{container}}.",
+        "tr": "{{container}} konteynerini yeniden başlatır."
+      },
+      "command": "docker restart {{container}}",
+      "risk": "write"
+    },
+    {
+      "id": "docker-df",
+      "category": "docker",
+      "title": {
+        "en": "Docker disk usage",
+        "tr": "Docker disk kullanımı"
+      },
+      "description": {
+        "en": "Space taken by images, containers and volumes.",
+        "tr": "İmaj, konteyner ve volume'lerin kapladığı alan."
+      },
+      "command": "docker system df",
+      "risk": "read"
+    },
+    {
+      "id": "docker-prune",
+      "category": "docker",
+      "title": {
+        "en": "Remove unused Docker data",
+        "tr": "Kullanılmayan Docker verisini sil"
+      },
+      "description": {
+        "en": "Deletes stopped containers, unused networks and dangling images.",
+        "tr": "Durmuş konteynerleri, kullanılmayan ağları ve sahipsiz imajları siler."
+      },
+      "command": "docker system prune -f",
+      "risk": "destructive"
+    },
+    {
+      "id": "nginx-test",
+      "category": "web",
+      "title": {
+        "en": "Check nginx config",
+        "tr": "nginx yapılandırmasını sına"
+      },
+      "description": {
+        "en": "Tests the configuration without applying it.",
+        "tr": "Yapılandırmayı uygulamadan sınar."
+      },
+      "command": "sudo nginx -t",
+      "risk": "read"
+    },
+    {
+      "id": "nginx-reload",
+      "category": "web",
+      "title": {
+        "en": "Reload nginx",
+        "tr": "nginx'i yeniden yükle"
+      },
+      "description": {
+        "en": "Tests the config, then reloads without dropping connections.",
+        "tr": "Yapılandırmayı sınar, sonra bağlantıları koparmadan yeniden yükler."
+      },
+      "command": "sudo nginx -t && sudo systemctl reload nginx",
+      "risk": "write"
+    },
+    {
+      "id": "nginx-errors",
+      "category": "web",
+      "title": {
+        "en": "nginx error log",
+        "tr": "nginx hata logu"
+      },
+      "description": {
+        "en": "The last 50 lines of the nginx error log.",
+        "tr": "nginx hata logunun son 50 satırı."
+      },
+      "command": "sudo tail -n 50 /var/log/nginx/error.log",
+      "risk": "read"
+    },
+    {
+      "id": "cert-expiry",
+      "category": "web",
+      "title": {
+        "en": "Certificate expiry",
+        "tr": "Sertifika bitiş tarihi"
+      },
+      "description": {
+        "en": "When the TLS certificate served for {{domain}} expires.",
+        "tr": "{{domain}} için sunulan TLS sertifikasının bitiş tarihi."
+      },
+      "command": "echo | openssl s_client -servername {{domain}} -connect {{domain}}:443 2>/dev/null | openssl x509 -noout -dates",
+      "risk": "read"
+    },
+    {
+      "id": "listening",
+      "category": "network",
+      "title": {
+        "en": "Listening ports",
+        "tr": "Dinlenen portlar"
+      },
+      "description": {
+        "en": "Which programs listen on which ports.",
+        "tr": "Hangi programın hangi portu dinlediği."
+      },
+      "command": "sudo ss -tlnp",
+      "risk": "read"
+    },
+    {
+      "id": "curl-head",
+      "category": "network",
+      "title": {
+        "en": "HTTP headers of a URL",
+        "tr": "Bir URL'nin HTTP başlıkları"
+      },
+      "description": {
+        "en": "Status and headers {{url}} answers with.",
+        "tr": "{{url}} adresinin döndüğü durum ve başlıklar."
+      },
+      "command": "curl -sSI {{url}}",
+      "risk": "read"
+    },
+    {
+      "id": "public-ip",
+      "category": "network",
+      "title": {
+        "en": "Public IP",
+        "tr": "Genel IP"
+      },
+      "description": {
+        "en": "The address this server reaches the internet from.",
+        "tr": "Sunucunun internete çıktığı adres."
+      },
+      "command": "curl -s https://ifconfig.me && echo",
+      "risk": "read"
+    },
+    {
+      "id": "dns-lookup",
+      "category": "network",
+      "title": {
+        "en": "DNS lookup",
+        "tr": "DNS sorgusu"
+      },
+      "description": {
+        "en": "Addresses {{domain}} resolves to from this server.",
+        "tr": "{{domain}} adının bu sunucudan çözüldüğü adresler."
+      },
+      "command": "getent hosts {{domain}}",
+      "risk": "read"
+    },
+    {
+      "id": "apt-upgradable",
+      "category": "packages",
+      "title": {
+        "en": "Available updates",
+        "tr": "Bekleyen güncellemeler"
+      },
+      "description": {
+        "en": "Refreshes the package lists and shows what can be upgraded (Debian/Ubuntu).",
+        "tr": "Paket listelerini yeniler ve yükseltilebilecekleri gösterir (Debian/Ubuntu)."
+      },
+      "command": "sudo apt update && apt list --upgradable",
+      "risk": "write"
+    },
+    {
+      "id": "apt-upgrade",
+      "category": "packages",
+      "title": {
+        "en": "Install updates",
+        "tr": "Güncellemeleri kur"
+      },
+      "description": {
+        "en": "Upgrades all packages (Debian/Ubuntu).",
+        "tr": "Tüm paketleri yükseltir (Debian/Ubuntu)."
+      },
+      "command": "sudo apt update && sudo apt upgrade -y",
+      "risk": "write"
+    },
+    {
+      "id": "dnf-check",
+      "category": "packages",
+      "title": {
+        "en": "Available updates (dnf)",
+        "tr": "Bekleyen güncellemeler (dnf)"
+      },
+      "description": {
+        "en": "What can be upgraded on Fedora/RHEL/Alma/Rocky.",
+        "tr": "Fedora/RHEL/Alma/Rocky'de yükseltilebilecekler."
+      },
+      "command": "sudo dnf check-update",
+      "risk": "read"
+    }
+  ]
+}
